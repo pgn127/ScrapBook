@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="Test1.xcdatamodel" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <elements/>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14B25" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Clipping" representedClassName="Scrapbook.Clipping" syncable="YES">
+        <attribute name="dateCreated" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="image" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
+        <attribute name="notes" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="myCollection" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Collection" inverseName="myClippings" inverseEntity="Collection" syncable="YES"/>
+    </entity>
+    <entity name="Collection" representedClassName="Scrapbook.Collection" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="myClippings" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Clipping" inverseName="myCollection" inverseEntity="Clipping" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Clipping" positionX="-576" positionY="-657" width="128" height="103"/>
+        <element name="Collection" positionX="-749" positionY="-775" width="128" height="73"/>
+    </elements>
 </model>
