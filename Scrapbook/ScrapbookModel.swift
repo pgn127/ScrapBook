@@ -138,7 +138,7 @@ class ScrapbookModel {
             inManagedObjectContext: managedObjectContext!)
         request.entity = entityDescription
         
-        let pred = NSPredicate(format: "notes contains[c] %@", match)
+        let pred = NSPredicate(format: "notes contains %@", match)
         request.predicate = pred
         
         var error: NSError?
@@ -147,9 +147,22 @@ class ScrapbookModel {
         return results as! [Clipping]
     }
     
-//    func searchClippingsWithin(match: String, collection: Collection) -> [Clipping]{
-//        
-//    }
+    func searchClippingsWithin(match: String, collection: Collection) -> [Clipping]{
+        let request = NSFetchRequest()
+        let entityDescription = NSEntityDescription.entityForName("Clipping",
+            inManagedObjectContext: managedObjectContext!)
+        request.entity = entityDescription
+        
+        let pred = NSPredicate(format: "notes contains %@", match)
+        let pred2 = NSPredicate(format: "myCollection == %@", collection)
+        let predicate = NSCompoundPredicate(type: NSCompoundPredicateType.OrPredicateType, subpredicates: [pred, pred2])
+        request.predicate = predicate
+        
+        var error: NSError?
+        var results = managedObjectContext?.executeFetchRequest(request,
+            error: &error)
+        return results as! [Clipping]
+    }
     
    
 }
