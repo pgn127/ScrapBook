@@ -1,13 +1,59 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6211" systemVersion="14A298i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Y41-o6-zKW">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6204"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Create a New Clipping-->
+        <scene sceneID="eMc-gM-JHn">
+            <objects>
+                <viewController id="dBf-Jt-wOJ" customClass="CreateClippingViewController" customModule="Scrapbook" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="UHg-Mx-Alq"/>
+                        <viewControllerLayoutGuide type="bottom" id="InZ-9O-Ihm"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="4IQ-5J-vgi">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter notes here..." minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rna-Bz-Pog">
+                                <rect key="frame" x="16" y="299" width="568" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
+                            </textField>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="question" translatesAutoresizingMaskIntoConstraints="NO" id="Zq8-PL-EhD">
+                                <rect key="frame" x="175" y="72" width="251" height="219"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="19b-gN-4RM" appends="YES" id="s3G-BO-e50"/>
+                                </connections>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Create a New Clipping" id="sdv-hg-QWD">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="3PP-ZD-5r3"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="nW4-PX-NDg"/>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="clippingImageView" destination="Zq8-PL-EhD" id="1zD-pk-TBZ"/>
+                        <outlet property="enteredNotes" destination="rna-Bz-Pog" id="mHx-qE-sVs"/>
+                        <outlet property="selectImage" destination="19b-gN-4RM" id="o2j-Cd-UA0"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fam-FF-MR2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="19b-gN-4RM">
+                    <connections>
+                        <action selector="selectImage:" destination="dBf-Jt-wOJ" id="rOS-cD-jop"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="2950" y="-804"/>
+        </scene>
+        <!--Clipping Detail View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="ClippingDetailViewController" customModule="Scrapbook" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -15,11 +61,196 @@
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Notes:" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TgK-Bg-lIZ">
+                                <rect key="frame" x="129" y="364" width="373" height="216"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Date created" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TR0-Al-8JU">
+                                <rect key="frame" x="248" y="350" width="99" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="question" translatesAutoresizingMaskIntoConstraints="NO" id="hyL-Dx-m7F">
+                                <rect key="frame" x="16" y="77" width="565" height="230"/>
+                            </imageView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <connections>
+                        <outlet property="date" destination="TR0-Al-8JU" id="esB-iS-cVz"/>
+                        <outlet property="img" destination="hyL-Dx-m7F" id="Z7m-02-ilM"/>
+                        <outlet property="notes" destination="TgK-Bg-lIZ" id="09v-NQ-78q"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="2823" y="97"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="pzf-RX-pBr">
+            <objects>
+                <navigationController id="Y41-o6-zKW" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="4SQ-vv-JOn">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="ZLB-51-rcs">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
+                    <connections>
+                        <segue destination="qgZ-zb-OIl" kind="relationship" relationship="rootViewController" id="duT-m9-k98"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LRU-mW-QS6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-130" y="62"/>
+        </scene>
+        <!--Clipping List View Controller-->
+        <scene sceneID="BNs-x7-MAl">
+            <objects>
+                <tableViewController id="eH9-mW-qo2" customClass="ClippingListViewController" customModule="Scrapbook" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="65" sectionHeaderHeight="22" sectionFooterHeight="22" id="Onf-7W-mto" customClass="ClippingListViewController">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="clippingCell" rowHeight="65" id="WKS-p3-M3q" customClass="clippingCell" customModule="Scrapbook" customModuleProvider="target">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="WKS-p3-M3q" id="Ezw-94-3H5">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hyz-ns-fOB">
+                                            <rect key="frame" x="92" y="22" width="36" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="3" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Notes" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s6T-Bu-FiD">
+                                            <rect key="frame" x="221" y="21" width="246" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="question" translatesAutoresizingMaskIntoConstraints="NO" id="e5U-gL-LHI">
+                                            <rect key="frame" x="8" y="0.0" width="65" height="65"/>
+                                        </imageView>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="clippingImg" destination="e5U-gL-LHI" id="4sm-SE-8jd"/>
+                                    <outlet property="date" destination="hyz-ns-fOB" id="dhn-VZ-vkV"/>
+                                    <outlet property="img" destination="e5U-gL-LHI" id="0gJ-qE-LKA"/>
+                                    <outlet property="notes" destination="s6T-Bu-FiD" id="SHj-Nn-zpz"/>
+                                    <segue destination="vXZ-lx-hvc" kind="show" identifier="showDetail" id="W8M-LG-R83"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="eH9-mW-qo2" id="hz4-1T-KP4"/>
+                            <outlet property="delegate" destination="eH9-mW-qo2" id="9dN-Fn-zzS"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="xkE-zT-pau">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="dUu-IL-UzG">
+                            <connections>
+                                <segue destination="gAK-fh-A81" kind="presentation" identifier="addClipping" id="uZm-42-Pms"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="e6P-6d-5tJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1503" y="88"/>
+        </scene>
+        <!--Collection List-->
+        <scene sceneID="FkM-Dc-Nkl">
+            <objects>
+                <tableViewController id="qgZ-zb-OIl" customClass="CollectionListViewController" customModule="Scrapbook" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="YXG-fp-n9C">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" restorationIdentifier="allClipsCell" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="allClipsCell" textLabel="gX7-Z0-2U2" style="IBUITableViewCellStyleDefault" id="Rc2-tJ-3oK">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Rc2-tJ-3oK" id="lFQ-ZQ-hTu">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="All Clippings" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="gX7-Z0-2U2">
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="eH9-mW-qo2" kind="show" identifier="showAllClips" id="MeT-jZ-K7R"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="collectionCell" textLabel="eVN-cP-gEV" style="IBUITableViewCellStyleDefault" id="Ntr-qV-iNt">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ntr-qV-iNt" id="XYe-Gn-ID3">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="eVN-cP-gEV">
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="eH9-mW-qo2" kind="show" identifier="showClips" id="T50-JO-gM2"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="qgZ-zb-OIl" id="FN5-m6-GaU"/>
+                            <outlet property="delegate" destination="qgZ-zb-OIl" id="NQh-On-tSl"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Collection List" id="Bgf-c9-c8u">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="brR-ev-d71">
+                            <connections>
+                                <action selector="createCollectionClicked:" destination="qgZ-zb-OIl" id="0fN-0Z-YGj"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="C6a-9f-sqQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="723" y="74"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="qRl-UX-qfp">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="gAK-fh-A81" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="cbk-Ry-JJL">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="dBf-Jt-wOJ" kind="relationship" relationship="rootViewController" id="i5d-Tc-DBC"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="t8I-B6-WoV" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2138" y="-804"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="question" width="290" height="230"/>
+    </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="T50-JO-gM2"/>
+    </inferredMetricsTieBreakers>
 </document>

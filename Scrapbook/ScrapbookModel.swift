@@ -37,6 +37,21 @@ class ScrapbookModel {
         return newCol
     }
     
+    func getAllClippings() -> [Clipping] {
+        var error: NSError?
+        var clippingArray: [Clipping] = []
+        let fetchRequest = NSFetchRequest(entityName: "Clipping")
+        let fetchResults = managedObjectContext!.executeFetchRequest(fetchRequest, error: &error) as? [Clipping]
+        
+        if let clippings = fetchResults{
+            clippingArray = clippings
+        }else{
+            println("Could not fetch \(error), \(error!.userInfo)")
+        }
+        return clippingArray
+        //return collectionArray
+    }
+    
     func getAllCollections() -> [Collection] {
         var error: NSError?
         let fetchRequest = NSFetchRequest(entityName: "Collection")
@@ -48,7 +63,6 @@ class ScrapbookModel {
             println("Could not fetch \(error), \(error!.userInfo)")
         }
         return collectionArray
-        //return collectionArray
     }
     
     func newClipping(notes: String, image: NSData) -> Clipping{
