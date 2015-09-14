@@ -30,6 +30,8 @@ class CollectionListViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
          self.navigationItem.leftBarButtonItem = self.editButtonItem()
     }
+    
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -89,41 +91,10 @@ class CollectionListViewController: UITableViewController {
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
             
         } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-//            var alert = UIAlertView()
-//            alert.alertViewStyle = UIAlertViewStyle.PlainTextInput
-//            alert.title = "Enter Input"
-//            //how do i implement functionality of these
-//            alert.addButtonWithTitle("Create")
-//            alert.addButtonWithTitle("Cancel")
-//            alert.dismissWithClickedButtonIndex(1, animated: false)
-//            let textField = alert.textFieldAtIndex(0)
-//            textField!.placeholder = "Collection Name Here"
-//            //textField.keyboardType =
-//            alert.delegate = self
-//            alert.show()
-            
-            var inputTextField: UITextField?
-            let alert = UIAlertController(title: "Create a new Collection", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default, handler: nil))
-            alert.addAction(UIAlertAction(title: "Create", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
-                // Now do whatever you want with inputTextField (remember to unwrap the optional)
-                var newCol = self.model!.newCollection((alert.textFields?.first as! UITextField).text)
-                self.collectionsArray.append(newCol)
-                let cell = tableView.dequeueReusableCellWithIdentifier("collectionCell", forIndexPath: indexPath) as! UITableViewCell
-                //let collection = self.collectionsArray[indexPath.row-1] //either plus or minus one
-                cell.textLabel!.text = newCol.name
-            }))
-            alert.addTextFieldWithConfigurationHandler({(textField: UITextField!) in
-                textField.placeholder = "Enter Collection name"
-                //textField.secureTextEntry = true
-                inputTextField = textField
-            })
-            
-            presentViewController(alert, animated: true, completion: nil)
+            // insert functionality implemented separately
             
         
-        }    
+        }
     }
     
 
@@ -149,14 +120,12 @@ class CollectionListViewController: UITableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get the new view controller using [segue destinationViewController].
         // Pass the selected object to the new view controller.
-        //let vC = segue.destinationViewController as! ClippingListViewController
-        //let historyVC = segue.destinationViewController as! HistoryViewController
-        //let historyVC = vC.viewControllers.first as! HistoryViewController
-//        let index = self.tableView.indexPathForC
        if segue.identifier == "showClips"{
             if let destination = segue.destinationViewController as? ClippingListViewController{
                 if let collectionIndex = tableView.indexPathForSelectedRow()?.row {
+                    //println(collectionIndex)
                     destination.currentCollection = collectionsArray[collectionIndex-1]
+                    //println(collectionsArray[collectionIndex-1].name)
                     destination.model = model
                 }
                 
@@ -169,20 +138,6 @@ class CollectionListViewController: UITableViewController {
             }
         }
 
-//        if let destination = segue.destinationViewController as? ClippingListViewController{
-//            if let collectionIndex = tableView.indexPathForSelectedRow()?.row {
-//                if collectionIndex == 0 {
-//                    //show allclippings
-//                    destination.currentCollection = nil
-//                }
-//                else{
-//                    
-//                    destination.currentCollection = collectionsArray[collectionIndex-1]
-//                }
-//                destination.model = model
-//            }
-//        }
-        //historyVC.historyArray = questionresponses
         
     }
     
@@ -196,9 +151,6 @@ class CollectionListViewController: UITableViewController {
             var newCol = self.model!.newCollection((alert.textFields?.first as! UITextField).text)
             self.collectionsArray.append(newCol)
             self.tableView.reloadData()
-//            let cell = tableView.dequeueReusableCellWithIdentifier("collectionCell", forIndexPath: indexPath) as! UITableViewCell
-//            //let collection = self.collectionsArray[indexPath.row-1] //either plus or minus one
-//            cell.textLabel!.text = newCol.name
         }))
         alert.addTextFieldWithConfigurationHandler({(textField: UITextField!) in
             textField.placeholder = "Enter Collection name"

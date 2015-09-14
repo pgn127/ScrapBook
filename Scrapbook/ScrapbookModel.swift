@@ -65,13 +65,17 @@ class ScrapbookModel {
         return collectionArray
     }
     
-    func newClipping(notes: String, image: NSData) -> Clipping{
+    func newClipping(notes: String, image: UIImage) -> Clipping{
         let entityDescription = NSEntityDescription.entityForName("Clipping",inManagedObjectContext: managedObjectContext!)
         var newClip = Clipping(entity: entityDescription!, insertIntoManagedObjectContext: managedObjectContext)
         newClip.notes = notes
-        newClip.image = image
+        //newClip.image = image
         newClip.dateCreated = NSDate()
-        
+        let documentsFolder: String = NSSearchPathForDirectoriesInDomains( .DocumentDirectory, .UserDomainMask, true)[0] as! String
+        newClip.image = "/\(newClip.dateCreated).jpg"
+        let documentPath = documentsFolder + newClip.image
+        let imageData = UIImageJPEGRepresentation(image, 1.0)
+        imageData.writeToFile(documentPath, atomically: true)
         saveObj()
         
         return newClip
@@ -82,6 +86,7 @@ class ScrapbookModel {
     func addClippingtoCollection(clipping: Clipping, collection: Collection ) {
         //let entityDescription = NSEntityDescription.entityForName("Collection",inManagedObjectContext: managedObjectContext!)
         collection.addClipping(clipping)
+        clipping.myCollection = collection 
         
         var error: NSError?
         managedObjectContext?.save(&error)
@@ -110,6 +115,9 @@ class ScrapbookModel {
     }
     
     func deleteCollection(collection: Collection){
+        for clipping in collection.myClippings{
+            managedObjectContext!.deleteObject(clipping as! NSManagedObject)
+        }
         managedObjectContext!.deleteObject(collection)
         var error: NSError?
         managedObjectContext?.save(&error)
@@ -152,7 +160,7 @@ class ScrapbookModel {
             inManagedObjectContext: managedObjectContext!)
         request.entity = entityDescription
         
-        let pred = NSPredicate(format: "notes contains %@", match)
+        let pred = NSPredicate(format: "notes contains[c] %@", match)
         request.predicate = pred
         
         var error: NSError?
@@ -167,9 +175,9 @@ class ScrapbookModel {
             inManagedObjectContext: managedObjectContext!)
         request.entity = entityDescription
         
-        let pred = NSPredicate(format: "notes contains %@", match)
+        let pred = NSPredicate(format: "notes contains[c] %@", match)
         let pred2 = NSPredicate(format: "myCollection == %@", collection)
-        let predicate = NSCompoundPredicate(type: NSCompoundPredicateType.OrPredicateType, subpredicates: [pred, pred2])
+        let predicate = NSCompoundPredicate(type: NSCompoundPredicateType.AndPredicateType, subpredicates: [pred, pred2])
         request.predicate = predicate
         
         var error: NSError?

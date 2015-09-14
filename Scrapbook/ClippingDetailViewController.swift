@@ -14,13 +14,19 @@ class ClippingDetailViewController: UIViewController {
     @IBOutlet weak var date: UILabel!
     @IBOutlet weak var notes: UILabel!
     
+    var imagevar: UIImage?
+    var datevar: String?
+    var notesvar: String?
+    
 //    let managedObjectContext = (UIApplication.sharedApplication().delegate
 //        as! AppDelegate).managedObjectContext
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
+        img.image = imagevar
+        date.text = datevar
+        notes.text = notesvar
         
         //TESTS FROM WHEN THIS CLASS WAS VIEWCONTROLLER
 //        var model = ScrapbookModel(object: managedObjectContext)

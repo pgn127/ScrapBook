@@ -8,37 +8,58 @@
 
 import UIKit
 
-class ClippingListViewController: UITableViewController {
+class ClippingListViewController: UITableViewController, UISearchResultsUpdating {
 
     
     var currentCollection: Collection?
     var model : ScrapbookModel?
     var displayedClippings: [Clipping] = []
+    var searchedClips: [Clipping] = []
+    var resultSearchController = UISearchController()
     
+    @IBOutlet weak var addbutton: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         //if a collection was selected in past screen show the clippings of that colleciton
-        
-        if let collection = currentCollection {
-            displayedClippings = collection.myClippings.allObjects as! [Clipping]
-            self.navigationItem.title = collection.name
-        }
-        
-         //if all clippings were selected show all clipppings
-        else{
-            displayedClippings = model!.getAllClippings()
-            self.navigationItem.title = "All Clippings"
-        }
-
-        
-        
-
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        //self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        
+        self.navigationItem.setRightBarButtonItems([addbutton,self.editButtonItem()], animated: true)
+        
+        self.resultSearchController = ({
+            let controller = UISearchController(searchResultsController: nil)
+            controller.searchResultsUpdater = self
+            controller.dimsBackgroundDuringPresentation = false
+            controller.searchBar.sizeToFit()
+            
+            self.tableView.tableHeaderView = controller.searchBar
+            
+            return controller
+        })()
+        
+        self.tableView.reloadData()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        if let collection = currentCollection {
+            var arrayClippings = collection.myClippings.allObjects as NSArray
+            displayedClippings = arrayClippings as! [Clipping]
+            self.navigationItem.title = collection.name
+        }
+            
+            //if all clippings were selected show all clipppings
+        else{
+            displayedClippings = model!.getAllClippings()
+            self.navigationItem.title = "All Clippings"
+        }
+        
+        tableView.reloadData()
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -57,30 +78,56 @@ class ClippingListViewController: UITableViewController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete method implementation.
         // Return the number of rows in the section.
-        return displayedClippings.count
+        if (self.resultSearchController.active) {
+            return self.searchedClips.count
+        }
+        else {
+            return self.displayedClippings.count
+        }
+        //return displayedClippings.count
     }
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("clippingCell", forIndexPath: indexPath) as! UITableViewCell
             //cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "qrCell")
-        let clipping = displayedClippings[indexPath.row]
+        var clipping: Clipping?
+        
+        if (self.resultSearchController.active) {
+            clipping = searchedClips[indexPath.row]
+        }
+        else{
+            clipping = displayedClippings[indexPath.row]
+        }
         var clipImg = cell.contentView.viewWithTag(1) as! UIImageView
 //        if let provided = clipping.image {
-        clipImg.image = UIImage(data: clipping.image as NSData)
-//        }
-//        else{
-//            clipImg.image = UIImage(named: "question")
-//        }
-        
-        //cell.img.image = UIImage(data: clipping.image as NSData)
+        let documentsFolder: String = NSSearchPathForDirectoriesInDomains( .DocumentDirectory, .UserDomainMask, true)[0] as! String
+        let documentPath = documentsFolder + "/\(clipping!.dateCreated).jpg"
+        clipImg.image = UIImage(contentsOfFile: documentsFolder+clipping!.image)
         var noteLabel = cell.contentView.viewWithTag(3) as! UILabel
         var dateLabel = cell.contentView.viewWithTag(2) as! UILabel
-        noteLabel.text = clipping.notes
-        dateLabel.text = "\(clipping.dateCreated)"
+        noteLabel.text = clipping!.notes
+        var dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "dd-MM-yyyy"
+        dateLabel.text = dateFormatter.stringFromDate(clipping!.dateCreated)
+        //dateLabel.text = "\(clipping!.dateCreated)"
         // Configure the cell...
-        
         return cell
+    }
+    
+    func updateSearchResultsForSearchController(searchController: UISearchController)
+    {
+        searchedClips.removeAll(keepCapacity: false)
+        if let insideCollection = currentCollection{
+            searchedClips = model!.searchClippingsWithin(searchController.searchBar.text, collection: insideCollection)
+            //println("performing search within a collection")
+        }
+        else{
+            searchedClips = model!.searchClippings(searchController.searchBar.text)
+            //println("performing search of all clippings")
+        }
+        
+        self.tableView.reloadData()
     }
     
 
@@ -92,17 +139,19 @@ class ClippingListViewController: UITableViewController {
     }
     */
 
-    /*
+    
     // Override to support editing the table view.
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
             // Delete the row from the data source
+            model!.deleteClipping(self.displayedClippings[indexPath.row])
+            displayedClippings.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         } else if editingStyle == .Insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         }    
     }
-    */
+    
 
     /*
     // Override to support rearranging the table view.
@@ -118,6 +167,25 @@ class ClippingListViewController: UITableViewController {
         return true
     }
     */
+//    func searchDisplayController(controller: UISearchDisplayController, shouldReloadTableForSearchString searchString: String!) -> Bool {
+//        if let insideCollection = currentCollection{
+//            searchedClips = model!.searchClippingsWithin(searchString, collection: insideCollection)
+//        }
+//        else{
+//            searchedClips = model!.searchClippings(searchString)
+//        }
+//        return true
+//    }
+//    
+//    func searchDisplayController(controller: UISearchDisplayController, shouldReloadTableForSearchScope searchOption: Int) -> Bool {
+//        if let insideCollection = currentCollection{
+//            searchedClips = model!.searchClippingsWithin(self.searchDisplayController!.searchBar.text, collection: insideCollection)
+//        }
+//        else{
+//            searchedClips = model!.searchClippings(self.searchDisplayController!.searchBar.text)
+//        }
+//        return true
+//    }
 
     
     // MARK: - Navigation
@@ -126,18 +194,35 @@ class ClippingListViewController: UITableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get the new view controller using [segue destinationViewController].
         // Pass the selected object to the new view controller.
-        if let destination = segue.destinationViewController as? ClippingDetailViewController{
-            if let clippingIndex = tableView.indexPathForSelectedRow()?.row {
+        if segue.identifier == "showDetail" {
+            if let destination = segue.destinationViewController as? ClippingDetailViewController {
+                if let clippingIndex = tableView.indexPathForSelectedRow()?.row {
             
-                var currentclipping = displayedClippings[clippingIndex]
-                
-                destination.img.image = UIImage(data: currentclipping.image as NSData)
-                destination.notes.text = currentclipping.notes
-                destination.date.text = "\(currentclipping.dateCreated)"
+                    var currentclipping = displayedClippings[clippingIndex]
+                    //destination.loadView()
+                    let documentsFolder: String = NSSearchPathForDirectoriesInDomains( .DocumentDirectory, .UserDomainMask, true)[0] as! String
+                    destination.imagevar = UIImage(contentsOfFile: documentsFolder+currentclipping.image)
+                    destination.notesvar = currentclipping.notes
+                    destination.datevar = "\(currentclipping.dateCreated)"
+                }
             }
             
-    }
+        }
+        if segue.identifier == "addClipping" {
+            let vC = segue.destinationViewController as! UINavigationController
+            let dest = vC.viewControllers.first as! CreateClippingViewController
+            dest.model = self.model
+            if let notAll = currentCollection{
+                dest.inCollection = notAll
+                
+            }
+            else {
+                dest.inCollection = nil
+                
+            }
+            
+        }
     
 
-}
+    }
 }
