@@ -22,25 +22,20 @@ class ViewController: UIViewController {
         var collectionb: Collection = model.newCollection("B")
         
         //create 3 clippings
-        var clipping1: Clipping = model.newClipping("1 foo",image: UIImageJPEGRepresentation(UIImage(named: "question"), 1))
-        var clipping2: Clipping = model.newClipping("2 foo",image: UIImageJPEGRepresentation(UIImage(named: "question"), 1))
-        var clipping3: Clipping = model.newClipping("3 bar",image: UIImageJPEGRepresentation(UIImage(named: "question"), 1))
+        var clipping1: Clipping = model.newClipping("1 foo",image: UIImage(named: "question")!)
+        var clipping2: Clipping = model.newClipping("2 foo",image: UIImage(named: "question")!)
+        var clipping3: Clipping = model.newClipping("3 bar",image: UIImage(named: "question")!)
         var testclippings:[Clipping] = [clipping1,clipping2,clipping3]
         
         //print list of all colelctions
         var collections = model.getAllCollections()
         for collection in collections {
             println(collection.name)
-//            for clipping in collection.myClippings {
-//                var currentclipping = clipping as! Clipping
-//                println("note value"+currentclipping.notes)
-//                println("date created +\(currentclipping.dateCreated)")
-//            }
         }
         
         //print list of all clippings
         for clipping in testclippings {
-            println("note value: \(clipping.notes)"+"   date created: \(clipping.dateCreated)")
+            println("note value: \(clipping.notes)"+"image path: \(clipping.image)"+"   date created: \(clipping.dateCreated)")
         }
         
         //add clipping 1 and 2 to collection a
@@ -51,7 +46,7 @@ class ViewController: UIViewController {
         println("IN Collection A before deletion")
         for clipping in collectiona.myClippings{
             var currentclipping = clipping as! Clipping
-            println("note value: \(currentclipping.notes)"+"   date created: \(currentclipping.dateCreated)")
+            println("note value: \(currentclipping.notes)"+"image path: \(currentclipping.image)"+"   date created: \(currentclipping.dateCreated)")
         }
         println("")
         
@@ -62,7 +57,7 @@ class ViewController: UIViewController {
         println("IN Collection A after deletion")
         for clipping in collectiona.myClippings{
             var currentclipping = clipping as! Clipping
-            println("note value: \(currentclipping.notes)"+"   date created: \(currentclipping.dateCreated)")
+            println("note value: \(currentclipping.notes)"+"image path: \(currentclipping.image)"+"   date created: \(currentclipping.dateCreated)")
         }
         
         
@@ -70,7 +65,7 @@ class ViewController: UIViewController {
         println("searched results:")
         var results = model.searchClippings("bar")
         for result in results {
-            println("note value: \(result.notes)"+"   date created: \(result.dateCreated)")
+            println("note value: \(result.notes)"+"image path: \(result.image)"+"   date created: \(result.dateCreated)")
         }
         //print(managedObjectContext)
         
