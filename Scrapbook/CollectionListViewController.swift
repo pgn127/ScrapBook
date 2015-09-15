@@ -91,7 +91,7 @@ class CollectionListViewController: UITableViewController {
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
             
         } else if editingStyle == .Insert {
-            // insert functionality implemented separately
+            // inserted functionality implemented separately
             
         
         }
@@ -147,8 +147,11 @@ class CollectionListViewController: UITableViewController {
         let alert = UIAlertController(title: "Create a new Collection", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default, handler: nil))
         alert.addAction(UIAlertAction(title: "Create", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
-            // Now do whatever you want with inputTextField (remember to unwrap the optional)
-            var newCol = self.model!.newCollection((alert.textFields?.first as! UITextField).text)
+            var enteredText = (alert.textFields?.first as! UITextField).text
+            if count(enteredText) == 0 {
+                enteredText = "Unknown Collection"
+            }
+            var newCol = self.model!.newCollection(enteredText)
             self.collectionsArray.append(newCol)
             self.tableView.reloadData()
         }))
