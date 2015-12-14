@@ -55,11 +55,10 @@ class CollectionListViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if indexPath.row == 0 {
-            let cell = tableView.dequeueReusableCellWithIdentifier("allClipsCell", forIndexPath: indexPath) as! UITableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("allClipsCell", forIndexPath: indexPath) 
             return cell
-        }
-        else{
-        let cell = tableView.dequeueReusableCellWithIdentifier("collectionCell", forIndexPath: indexPath) as! UITableViewCell
+        } else{
+        let cell = tableView.dequeueReusableCellWithIdentifier("collectionCell", forIndexPath: indexPath) 
             let collection = collectionsArray[indexPath.row-1] //either plus or minus one
             cell.textLabel!.text = collection.name
             return cell
@@ -122,7 +121,7 @@ class CollectionListViewController: UITableViewController {
         // Pass the selected object to the new view controller.
        if segue.identifier == "showClips"{
             if let destination = segue.destinationViewController as? ClippingListViewController{
-                if let collectionIndex = tableView.indexPathForSelectedRow()?.row {
+                if let collectionIndex = tableView.indexPathForSelectedRow?.row {
                     //println(collectionIndex)
                     destination.currentCollection = collectionsArray[collectionIndex-1]
                     //println(collectionsArray[collectionIndex-1].name)
@@ -147,11 +146,20 @@ class CollectionListViewController: UITableViewController {
         let alert = UIAlertController(title: "Create a new Collection", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default, handler: nil))
         alert.addAction(UIAlertAction(title: "Create", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
-            var enteredText = (alert.textFields?.first as! UITextField).text
-            if count(enteredText) == 0 {
-                enteredText = "Unknown Collection"
+            //var enteredText = ((alert.textFields?.first)!).text
+            var inputText = "Unknown Collection"
+            if let firstText = alert.textFields?.first {
+                if let enteredText = firstText.text{
+                    if enteredText.characters.count > 0 {
+                        inputText = enteredText
+                    }
+                }
+                
             }
-            var newCol = self.model!.newCollection(enteredText)
+//            if enteredText.characters.count == 0 {
+//                enteredText = "Unknown Collection"
+//            }
+            let newCol = self.model!.newCollection(inputText)
             self.collectionsArray.append(newCol)
             self.tableView.reloadData()
         }))

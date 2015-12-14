@@ -47,7 +47,7 @@ class ClippingListViewController: UITableViewController, UISearchResultsUpdating
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         if let collection = currentCollection {
-            var arrayClippings = collection.myClippings.allObjects as NSArray
+            let arrayClippings = collection.myClippings.allObjects as NSArray
             displayedClippings = arrayClippings as! [Clipping]
             self.navigationItem.title = collection.name
         }
@@ -89,7 +89,7 @@ class ClippingListViewController: UITableViewController, UISearchResultsUpdating
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("clippingCell", forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("clippingCell", forIndexPath: indexPath) 
             //cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "qrCell")
         var clipping: Clipping?
         
@@ -99,15 +99,15 @@ class ClippingListViewController: UITableViewController, UISearchResultsUpdating
         else{
             clipping = displayedClippings[indexPath.row]
         }
-        var clipImg = cell.contentView.viewWithTag(1) as! UIImageView
+        let clipImg = cell.contentView.viewWithTag(1) as! UIImageView
 //        if let provided = clipping.image {
-        let documentsFolder: String = NSSearchPathForDirectoriesInDomains( .DocumentDirectory, .UserDomainMask, true)[0] as! String
+        let documentsFolder: String = NSSearchPathForDirectoriesInDomains( .DocumentDirectory, .UserDomainMask, true)[0] 
         let documentPath = documentsFolder + "/\(clipping!.dateCreated).jpg"
         clipImg.image = UIImage(contentsOfFile: documentsFolder+clipping!.image)
-        var noteLabel = cell.contentView.viewWithTag(3) as! UILabel
-        var dateLabel = cell.contentView.viewWithTag(2) as! UILabel
+        let noteLabel = cell.contentView.viewWithTag(3) as! UILabel
+        let dateLabel = cell.contentView.viewWithTag(2) as! UILabel
         noteLabel.text = clipping!.notes
-        var dateFormatter = NSDateFormatter()
+        let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "dd-MM-yyyy"
         dateLabel.text = dateFormatter.stringFromDate(clipping!.dateCreated)
         //dateLabel.text = "\(clipping!.dateCreated)"
@@ -119,11 +119,11 @@ class ClippingListViewController: UITableViewController, UISearchResultsUpdating
     {
         searchedClips.removeAll(keepCapacity: false)
         if let insideCollection = currentCollection{
-            searchedClips = model!.searchClippingsWithin(searchController.searchBar.text, collection: insideCollection)
+            searchedClips = model!.searchClippingsWithin(searchController.searchBar.text!, collection: insideCollection)
             //println("performing search within a collection")
         }
         else{
-            searchedClips = model!.searchClippings(searchController.searchBar.text)
+            searchedClips = model!.searchClippings(searchController.searchBar.text!)
             //println("performing search of all clippings")
         }
         
@@ -196,11 +196,11 @@ class ClippingListViewController: UITableViewController, UISearchResultsUpdating
         // Pass the selected object to the new view controller.
         if segue.identifier == "showDetail" {
             if let destination = segue.destinationViewController as? ClippingDetailViewController {
-                if let clippingIndex = tableView.indexPathForSelectedRow()?.row {
+                if let clippingIndex = tableView.indexPathForSelectedRow?.row {
             
-                    var currentclipping = displayedClippings[clippingIndex]
+                    let currentclipping = displayedClippings[clippingIndex]
                     //destination.loadView()
-                    let documentsFolder: String = NSSearchPathForDirectoriesInDomains( .DocumentDirectory, .UserDomainMask, true)[0] as! String
+                    let documentsFolder: String = NSSearchPathForDirectoriesInDomains( .DocumentDirectory, .UserDomainMask, true)[0]
                     destination.imagevar = UIImage(contentsOfFile: documentsFolder+currentclipping.image)
                     destination.notesvar = currentclipping.notes
                     destination.datevar = "\(currentclipping.dateCreated)"

@@ -20,17 +20,22 @@ class ScrapbookModel {
     }
     
     func saveObj(){
-        var error: NSError?
-        managedObjectContext?.save(&error)
-        
-        if let err = error {
-            println("there was an error saving object")
+        //var error: NSError?
+        do{
+            try managedObjectContext?.save()
+        } catch{
+            print("there was an error saving object")
         }
     }
     
+//        if let err = error {
+//            print("there was an error saving object")
+//        }
+    
+    
     func newCollection(name: String) -> Collection{
         let entityDescription = NSEntityDescription.entityForName("Collection",inManagedObjectContext: managedObjectContext!)
-        var newCol = Collection(entity: entityDescription!, insertIntoManagedObjectContext: managedObjectContext)
+        let newCol = Collection(entity: entityDescription!, insertIntoManagedObjectContext: managedObjectContext)
         newCol.name = name
         //collectionArray.append(newCol)
         saveObj()
@@ -38,44 +43,50 @@ class ScrapbookModel {
     }
     
     func getAllClippings() -> [Clipping] {
-        var error: NSError?
+        //var error: NSError?
         var clippingArray: [Clipping] = []
         let fetchRequest = NSFetchRequest(entityName: "Clipping")
-        let fetchResults = managedObjectContext!.executeFetchRequest(fetchRequest, error: &error) as? [Clipping]
-        
-        if let clippings = fetchResults{
-            clippingArray = clippings
-        }else{
-            println("Could not fetch \(error), \(error!.userInfo)")
+        do{
+            let fetchResults = try managedObjectContext!.executeFetchRequest(fetchRequest) as? [Clipping]
+            if let clippings = fetchResults{
+                clippingArray = clippings
+            }
+        } catch {
+            print("error fetching results")
         }
+
         return clippingArray
-        //return collectionArray
     }
     
     func getAllCollections() -> [Collection] {
-        var error: NSError?
+        //var error: NSError?
         let fetchRequest = NSFetchRequest(entityName: "Collection")
-        let fetchResults = managedObjectContext!.executeFetchRequest(fetchRequest, error: &error) as? [Collection]
-        
-        if let collections = fetchResults{
-            collectionArray = collections
-        }else{
-            println("Could not fetch \(error), \(error!.userInfo)")
+        do{
+            let fetchResults = try managedObjectContext!.executeFetchRequest(fetchRequest) as? [Collection]
+            if let collections = fetchResults{
+                collectionArray = collections
+            }
+        } catch {
+            print("error fetching results")
         }
+        
         return collectionArray
     }
     
     func newClipping(notes: String, image: UIImage) -> Clipping{
         let entityDescription = NSEntityDescription.entityForName("Clipping",inManagedObjectContext: managedObjectContext!)
-        var newClip = Clipping(entity: entityDescription!, insertIntoManagedObjectContext: managedObjectContext)
+        let newClip = Clipping(entity: entityDescription!, insertIntoManagedObjectContext: managedObjectContext)
         newClip.notes = notes
         //newClip.image = image
         newClip.dateCreated = NSDate()
-        let documentsFolder: String = NSSearchPathForDirectoriesInDomains( .DocumentDirectory, .UserDomainMask, true)[0] as! String
+        let documentsFolder: String = NSSearchPathForDirectoriesInDomains( .DocumentDirectory, .UserDomainMask, true)[0] 
         newClip.image = "/\(newClip.dateCreated).jpg"
         let documentPath = documentsFolder + newClip.image
-        let imageData = UIImageJPEGRepresentation(image, 1.0)
-        imageData.writeToFile(documentPath, atomically: true)
+        if let imageData = UIImageJPEGRepresentation(image, 1.0) {
+            imageData.writeToFile(documentPath, atomically: true)
+        } else {
+            print("no image data found")
+        }
         saveObj()
         
         return newClip
@@ -88,12 +99,16 @@ class ScrapbookModel {
         collection.addClipping(clipping)
         clipping.myCollection = collection 
         
-        var error: NSError?
-        managedObjectContext?.save(&error)
-        
-        if let err = error {
-            println("there was an error adding clipping")
+        //var error: NSError?
+        do{
+            try managedObjectContext?.save()
+        } catch {
+            print("there was an error adding clipping")
         }
+        
+//        if let err = error {
+//            println("there was an error adding clipping")
+//        }
         
         //will this change be made automatically in the collection array
 //        var error: NSError?
@@ -119,12 +134,16 @@ class ScrapbookModel {
             managedObjectContext!.deleteObject(clipping as! NSManagedObject)
         }
         managedObjectContext!.deleteObject(collection)
-        var error: NSError?
-        managedObjectContext?.save(&error)
-        
-        if let err = error {
-            println("there was an error deleting collection")
+        //var error: NSError?
+        do{
+            try managedObjectContext?.save()
+        } catch {
+            print("there was an error deleting collection")
         }
+        
+//        if let err = error {
+//            println("there was an error deleting collection")
+//        }
 //        var error: NSError?
 //        let fetchRequest = NSFetchRequest(entityName: "Collection")
 //        let fetchResults = managedObjectContext!.executeFetchRequest(fetchRequest, error: &error) as? [Collection]
@@ -145,12 +164,16 @@ class ScrapbookModel {
     
     func deleteClipping(clipping: Clipping){
         managedObjectContext!.deleteObject(clipping)
-        var error: NSError?
-        managedObjectContext?.save(&error)
-        
-        if let err = error {
-            println("there was an error deleting clipping")
+        //var error: NSError?
+        do{
+            try managedObjectContext?.save()
+        } catch {
+            print("there was an error deleting clipping")
         }
+        
+//        if let err = error {
+//            println("there was an error deleting clipping")
+//        }
     }
     
     func searchClippings(match: String) -> [Clipping]{
@@ -163,10 +186,14 @@ class ScrapbookModel {
         let pred = NSPredicate(format: "notes contains[c] %@", match)
         request.predicate = pred
         
-        var error: NSError?
-        var results = managedObjectContext?.executeFetchRequest(request,
-            error: &error)
-        return results as! [Clipping]
+        //var error: NSError?
+        do{
+            let results = try managedObjectContext?.executeFetchRequest(request)
+            return results as! [Clipping]
+        } catch {
+            print("error searching clippings")
+        }
+        return []
     }
     
     func searchClippingsWithin(match: String, collection: Collection) -> [Clipping]{
@@ -180,10 +207,18 @@ class ScrapbookModel {
         let predicate = NSCompoundPredicate(type: NSCompoundPredicateType.AndPredicateType, subpredicates: [pred, pred2])
         request.predicate = predicate
         
-        var error: NSError?
-        var results = managedObjectContext?.executeFetchRequest(request,
-            error: &error)
-        return results as! [Clipping]
+        //var error: NSError?
+        do{
+            let results = try managedObjectContext?.executeFetchRequest(request)
+            return results as! [Clipping]
+        } catch {
+            print("error searching clippings")
+        }
+        return []
+
+//        var results = managedObjectContext?.executeFetchRequest(request,
+//            error: &error)
+//        return results as! [Clipping]
     }
     
    
